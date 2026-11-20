@@ -1,0 +1,491 @@
+/* style.css - TaskFlow styling (light mode + dark mode) */
+
+/* ===================================================
+   THEME VARIABLES
+   Light mode is the default (set on :root).
+   Dark mode overrides the same variables (set with [data-theme="dark"]).
+   This makes dark mode easy: just change the variable values.
+   =================================================== */
+:root {
+  --bg: #eef2fb;          /* page background */
+  --card-bg: #ffffff;     /* card / panel background */
+  --text: #2d2d3a;        /* main text color */
+  --text-muted: #6b6b80;  /* lighter text */
+  --primary: #6a5acd;     /* purple accent */
+  --primary-dark: #5949bb;
+  --border: #e3e0f5;      /* light border */
+  --sidebar-bg: #2a2750;  /* dark purple sidebar */
+  --sidebar-text: #d8d4ff;
+  --shadow: 0 4px 14px rgba(40, 30, 90, 0.08);
+
+  /* Priority colors */
+  --high: #e05260;   /* red */
+  --medium: #f0a830; /* orange */
+  --low: #3bbd6f;    /* green */
+
+  /* Category colors */
+  --cat-college: #4a90d9;  /* blue */
+  --cat-personal: #9b6dd9;  /* purple */
+  --cat-work: #2bb3a3;      /* teal */
+  --cat-other: #8a8a9a;     /* gray */
+}
+
+/* Dark mode: same variable names, dark values */
+[data-theme="dark"] {
+  --bg: #14142a;
+  --card-bg: #23233d;
+  --text: #ececf5;
+  --text-muted: #a0a0b8;
+  --primary: #9b8ae8;
+  --primary-dark: #8a79d8;
+  --border: #34344f;
+  --sidebar-bg: #0f0f22;
+  --sidebar-text: #c8c4ee;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+/* Reset spacing and box sizing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s; /* smooth theme switch */
+}
+
+/* App layout: sidebar on the left, main content on the right */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===================================================
+   SIDEBAR
+   =================================================== */
+.sidebar {
+  width: 230px;
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.logo-icon { font-size: 24px; }
+
+.sidebar-subtitle {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-top: -12px;
+}
+
+/* Dark mode toggle button */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--sidebar-text);
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.theme-toggle:hover { background-color: rgba(255, 255, 255, 0.2); }
+
+.sidebar-footer {
+  margin-top: auto;
+  font-size: 12px;
+  opacity: 0.6;
+  text-align: center;
+}
+
+/* ===================================================
+   MAIN AREA
+   =================================================== */
+.main {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.main-header { margin-bottom: 25px; }
+
+.main-header h1 {
+  font-size: 28px;
+  color: var(--primary);
+}
+
+.header-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ===================================================
+   DASHBOARD: stat cards + progress bar
+   =================================================== */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background-color: var(--card-bg);
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--primary); /* colored left edge */
+}
+
+.stat-card.completed-card { border-left-color: var(--low); }
+.stat-card.pending-card { border-left-color: var(--medium); }
+.stat-card.overdue-card { border-left-color: var(--high); }
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--text);
+}
+
+/* Progress bar card: spans all 4 columns (full width row) */
+.progress-card {
+  grid-column: 1 / -1;
+  background-color: var(--card-bg);
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: var(--text-muted);
+}
+
+.progress-header span { font-weight: bold; color: var(--primary); }
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background-color: var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--cat-personal));
+  border-radius: 6px;
+  transition: width 0.4s ease; /* smooth animation when % changes */
+}
+
+/* ===================================================
+   ADD TASK FORM
+   =================================================== */
+.add-form {
+  background-color: var(--card-bg);
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap; /* wrap to next line on small screens */
+}
+
+.add-form input[type="text"] { flex: 1; min-width: 180px; }
+
+.add-form input,
+.add-form select {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--card-bg);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+
+.add-form input:focus,
+.add-form select:focus { border-color: var(--primary); }
+
+#addBtn {
+  padding: 10px 20px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#addBtn:hover { background-color: var(--primary-dark); }
+
+/* ===================================================
+   TOOLBAR: search + category/priority filters + status buttons
+   =================================================== */
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#searchInput { flex: 1; min-width: 180px; }
+
+.toolbar input,
+.toolbar select {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--card-bg);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+
+.toolbar input:focus,
+.toolbar select:focus { border-color: var(--primary); }
+
+.status-filters { display: flex; gap: 8px; }
+
+.filter-btn {
+  padding: 8px 16px;
+  background-color: var(--card-bg);
+  color: var(--primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.filter-btn:hover { background-color: var(--bg); }
+
+.filter-btn.active {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* ===================================================
+   TASK LIST + TASK CARDS
+   =================================================== */
+.task-list { list-style: none; } /* remove default bullets */
+
+.task-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow);
+}
+
+/* Priority shown as colored left border on the card */
+.task-card.priority-High { border-left-color: var(--high); }
+.task-card.priority-Medium { border-left-color: var(--medium); }
+.task-card.priority-Low { border-left-color: var(--low); }
+
+.task-card input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.task-info { flex: 1; min-width: 0; }
+
+.task-title {
+  font-size: 15px;
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* Completed task: strikethrough + lighter color */
+.task-card.completed .task-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Meta row: category badge, priority badge, due date */
+.task-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+}
+
+/* Category badge colors */
+.badge.cat-College { background-color: var(--cat-college); }
+.badge.cat-Personal { background-color: var(--cat-personal); }
+.badge.cat-Work { background-color: var(--cat-work); }
+.badge.cat-Other { background-color: var(--cat-other); }
+
+/* Priority badge colors */
+.badge.priority-High { background-color: var(--high); }
+.badge.priority-Medium { background-color: var(--medium); }
+.badge.priority-Low { background-color: var(--low); }
+
+.due-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Overdue due date: red + bold */
+.due-date.overdue { color: var(--high); font-weight: bold; }
+
+.task-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+.edit-btn, .delete-btn {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  color: white;
+}
+
+.edit-btn { background-color: var(--cat-college); }
+.edit-btn:hover { background-color: #3a7ac0; }
+.delete-btn { background-color: var(--high); }
+.delete-btn:hover { background-color: #c8444f; }
+
+/* ===================================================
+   INLINE EDIT FORM (replaces a card while editing)
+   =================================================== */
+.edit-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-form-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.edit-form input[type="text"] { flex: 1; min-width: 150px; }
+
+.edit-form input,
+.edit-form select {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background-color: var(--card-bg);
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+}
+
+.edit-form input:focus,
+.edit-form select:focus { border-color: var(--primary); }
+
+.edit-form-actions { display: flex; gap: 8px; }
+
+.save-btn {
+  background-color: var(--low);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.cancel-btn {
+  background-color: var(--text-muted);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* Empty message */
+.empty-msg {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 30px;
+  font-size: 15px;
+}
+
+/* ===================================================
+   RESPONSIVE: tablets and mobile
+   =================================================== */
+@media (max-width: 900px) {
+  /* 2 stat cards per row on medium screens */
+  .dashboard { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  /* Stack sidebar on top as a compact bar on mobile */
+  .app { flex-direction: column; }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px;
+  }
+
+  .sidebar-subtitle { display: none; }
+  .theme-toggle { margin-left: auto; } /* push toggle to the right */
+  .sidebar-footer { display: none; }
+
+  .main { padding: 18px; }
+
+  /* Status filter buttons stretch full width on mobile */
+  .status-filters { width: 100%; }
+  .status-filters .filter-btn { flex: 1; }
+}

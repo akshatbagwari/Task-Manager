@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow - Task Manager</title>
+
+  <!-- Link the CSS file for styling -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- App layout: sidebar + main content -->
+  <div class="app">
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-icon">📝</span>
+        <span class="logo-text">TaskFlow</span>
+      </div>
+
+      <p class="sidebar-subtitle">Stay organized 🚀</p>
+
+      <!-- Dark mode toggle button -->
+      <button class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Dark Mode</span>
+      </button>
+
+      <p class="sidebar-footer">Built with HTML, CSS &amp; JS</p>
+    </aside>
+
+    <!-- ===== Main content ===== -->
+    <main class="main">
+      <header class="main-header">
+        <h1>TaskFlow</h1>
+        <p class="header-sub" id="todayDate">Today</p>
+      </header>
+
+      <!-- Dashboard: 4 stat cards + progress bar -->
+      <section class="dashboard">
+        <div class="stat-card">
+          <p class="stat-label">Total</p>
+          <p class="stat-value" id="totalCount">0</p>
+        </div>
+        <div class="stat-card completed-card">
+          <p class="stat-label">Completed</p>
+          <p class="stat-value" id="completedCount">0</p>
+        </div>
+        <div class="stat-card pending-card">
+          <p class="stat-label">Pending</p>
+          <p class="stat-value" id="pendingCount">0</p>
+        </div>
+        <div class="stat-card overdue-card">
+          <p class="stat-label">Overdue</p>
+          <p class="stat-value" id="overdueCount">0</p>
+        </div>
+
+        <!-- Progress bar card (spans full width below stats) -->
+        <div class="progress-card">
+          <div class="progress-header">
+            <p>Overall Progress</p>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Add task form: title + priority + category + due date + Add -->
+      <section class="add-form">
+        <input type="text" id="taskInput" placeholder="What do you need to do?" />
+        <select id="priorityInput" title="Priority">
+          <option value="Medium">Medium priority</option>
+          <option value="High">High priority</option>
+          <option value="Low">Low priority</option>
+        </select>
+        <select id="categoryInput" title="Category">
+          <option value="College">College</option>
+          <option value="Personal">Personal</option>
+          <option value="Work">Work</option>
+          <option value="Other">Other</option>
+        </select>
+        <input type="date" id="dueDateInput" title="Due date" />
+        <button id="addBtn">+ Add Task</button>
+      </section>
+
+      <!-- Toolbar: search + category filter + priority filter + status filters -->
+      <section class="toolbar">
+        <input type="text" id="searchInput" placeholder="🔍 Search tasks..." />
+
+        <select id="categoryFilter" title="Filter by category">
+          <option value="all">All Categories</option>
+          <option value="College">College</option>
+          <option value="Personal">Personal</option>
+          <option value="Work">Work</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <select id="priorityFilter" title="Filter by priority">
+          <option value="all">All Priorities</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+
+        <div class="status-filters">
+          <button class="filter-btn active" id="allBtn">All</button>
+          <button class="filter-btn" id="pendingBtn">Pending</button>
+          <button class="filter-btn" id="completedBtn">Completed</button>
+        </div>
+      </section>
+
+      <!-- Task list: task cards are added here by JavaScript -->
+      <ul id="taskList" class="task-list"></ul>
+
+      <!-- Shown when no tasks match the filters -->
+      <p class="empty-msg" id="emptyMsg" style="display: none;">No tasks match your filters. 🎉</p>
+    </main>
+  </div>
+
+  <!-- Link the JavaScript file at the end of the body -->
+  <script src="script.js"></script>
+</body>
+</html>
